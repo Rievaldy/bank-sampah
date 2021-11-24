@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.myewaste">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyEwaste">
+        <activity android:name=".DetailMasterBarang"></activity>
+        <activity android:name=".DetailActivityJenisBarang"></activity>
+        <activity android:name=".DetailTransaksiBarangActivity"></activity>
+        <activity android:name=".DetailTransaksiSaldoActivity"></activity>
+
+        <activity android:name=".SettingDownloadExcel" />
+
+        <activity android:name=".TambahEditTransaksiSaldoActivity" />
+        <activity android:name=".TambahEditMasterBarang" />
+        <activity android:name=".TambahEditJenisBarang" />
+        <activity android:name=".TambahEditTransaksi" />
+        <activity android:name=".TambahDataUser" />
+
+        <activity android:name=".MasterSatuanActivity" />
+        <activity android:name=".MasterJenisBarangActivity" />
+        <activity android:name=".MasterBarangActivity" />
+        <activity android:name=".MasterTransaksiBarangActivity" />
+        <activity android:name=".MasterTransaksiSaldoActivity"/>
+
+
+        <activity  android:name=".ProfilUser" />
+        <activity android:name=".LaporanTransaksiSA" />
+        <activity android:name=".DataUserActivity" />
+        <activity android:name=".NasabahActivity" />
+        <activity android:name=".TellerActivity" />
+        <activity android:name=".SuperAdminActivity" />
+        <activity android:name=".Login" />
+        <activity android:name=".LupaPassword" />
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
