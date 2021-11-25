@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.example.myewaste.Util.convertToRupiah;
 import static com.example.myewaste.Util.getRegisterCode;
 import static com.example.myewaste.Util.showMessage;
 
@@ -47,6 +48,11 @@ public class DetailTransaksiSaldoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_transaksi_saldo);
+
+        getSupportActionBar().setTitle("Detail Transaksi Saldo");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         layout = findViewById(R.id.layout_detail_transaksi_saldo);
         tvIdTransaksi = findViewById(R.id.tv_id_transaksi_dts);
         tvNamaNasabah = findViewById(R.id.tv_nama_nasabah_dts);
@@ -114,9 +120,9 @@ public class DetailTransaksiSaldoActivity extends AppCompatActivity {
 
     private void prepareLayout(){
         tvIdTransaksi.setText(transaksiSaldo.getId_transaksi_saldo());
-        tvJumlahPenarikan.setText("Rp. " + transaksiSaldo.getJumlah_transaksi());
-        tvPotongan.setText("Rp. " + transaksiSaldo.getPotongan());
-        tvTotal.setText("Rp. " + (transaksiSaldo.getJumlah_transaksi()-transaksiSaldo.getPotongan()));
+        tvJumlahPenarikan.setText(convertToRupiah(transaksiSaldo.getJumlah_transaksi()));
+        tvPotongan.setText(convertToRupiah(transaksiSaldo.getPotongan()));
+        tvTotal.setText(convertToRupiah(transaksiSaldo.getJumlah_transaksi()-transaksiSaldo.getPotongan()));
         tvStatus.setText(transaksiSaldo.getStatus());
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         Date date = new Date(transaksiSaldo.getTanggal_transaksi());
@@ -126,7 +132,7 @@ public class DetailTransaksiSaldoActivity extends AppCompatActivity {
         if(transaksiSaldo.getId_penerima().equals("none")){
             tvNamaTeller.setText(transaksiSaldo.getId_penerima());
         }else{
-            loadUserData(1, transaksiSaldo.getId_nasabah());
+            loadUserData(1, transaksiSaldo.getId_penerima());
         }
     }
 
@@ -217,5 +223,10 @@ public class DetailTransaksiSaldoActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }

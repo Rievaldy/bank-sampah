@@ -37,8 +37,10 @@ public class MasterTransaksiBarangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaksi_barang);
 
+        getSupportActionBar().setTitle("Master Transaksi Barang");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         recyclerView = findViewById(R.id.recycler_view_transaksi);
         btnDownloadLaporanBarang = findViewById(R.id.btnDownloadExclLaporanBarang);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -69,8 +71,10 @@ public class MasterTransaksiBarangActivity extends AppCompatActivity {
         Query transaksiQuery = databaseReference.orderByChild("tanggal_transaksi");
         // Read from the database
         if(getRegisterCode(sessionManagement.getUserSession()).toLowerCase().equals("n")){
+            btnDownloadLaporanBarang.setVisibility(View.GONE);
             transaksiQuery = databaseReference.orderByChild("no_nasabah").equalTo(sessionManagement.getUserSession());
         }else if(getRegisterCode(sessionManagement.getUserSession()).toLowerCase().equals("t")){
+            btnDownloadLaporanBarang.setVisibility(View.GONE);
             transaksiQuery = databaseReference.orderByChild("no_teller").equalTo(sessionManagement.getUserSession());
         }
         transaksiQuery.addValueEventListener(new ValueEventListener() {
@@ -96,6 +100,12 @@ public class MasterTransaksiBarangActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public interface MasterTransaksiListener{

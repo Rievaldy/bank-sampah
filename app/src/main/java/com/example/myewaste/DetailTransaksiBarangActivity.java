@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.example.myewaste.Util.convertToRupiah;
 import static com.example.myewaste.Util.getRegisterCode;
 
 public class DetailTransaksiBarangActivity extends AppCompatActivity {
@@ -47,6 +48,10 @@ public class DetailTransaksiBarangActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_transaksi_barang);
+
+        getSupportActionBar().setTitle("Detail Transaksi Barang");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         layout = findViewById(R.id.layout_detail_transaksi_barang);
         tvIdTransaksi = findViewById(R.id.tv_id_transaksi_dtb);
@@ -86,7 +91,7 @@ public class DetailTransaksiBarangActivity extends AppCompatActivity {
         Date date = new Date(transaksiBarang.getTanggal_transaksi());
         String tanggalTransaksi = sdf.format(date);
         tvTanggalTransaksi.setText(tanggalTransaksi);
-        tvTotalHarga.setText("Rp. "+ transaksiBarang.getTotal_harga());
+        tvTotalHarga.setText(convertToRupiah(transaksiBarang.getTotal_harga()));
         loadUserData(0, transaksiBarang.getNo_nasabah());//mode 0 for user
         loadUserData(1, transaksiBarang.getNo_teller());//mode 1 for teller
         loadJenisBarangById(transaksiBarang.getNomor_jenis_barang());
@@ -128,7 +133,7 @@ public class DetailTransaksiBarangActivity extends AppCompatActivity {
                     jenisBarang = data.getValue(MasterJenisBarang.class);
                 }
                 tvNamaJenisBarang.setText(jenisBarang.getNama_master_jenis_barang());
-                tvHargaBarang.setText("Rp. " + jenisBarang.getHarga());
+                tvHargaBarang.setText(convertToRupiah(jenisBarang.getHarga()));
                 loadSatuanById(jenisBarang.getNo_satuan_barang());
                 loadBarangById(jenisBarang.getNo_master_barang());
             }
@@ -174,5 +179,11 @@ public class DetailTransaksiBarangActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

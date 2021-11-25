@@ -41,6 +41,8 @@ public class Login extends AppCompatActivity {
 
         //Toolbar toolbar=findViewById(R.id.toolbar);
         //setActionBar(toolbar);
+        String newBalance = Util.convertToRupiah(1230000);
+        Log.d(TAG, "onCreate: "+ newBalance);
 
         database = FirebaseDatabase.getInstance().getReference();
 

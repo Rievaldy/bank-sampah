@@ -59,9 +59,14 @@ public class TambahEditJenisBarang extends AppCompatActivity {
         t1 = findViewById(R.id.txt_nama);
         t2 = findViewById(R.id.txt_harga);
 
+        getSupportActionBar().setTitle("Tambah Jenis Barang");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if(getIntent().hasExtra("EXTRAS_JENIS_BARANG")){
             masterJenisBarang = getIntent().getParcelableExtra("EXTRAS_JENIS_BARANG");
             mode = 1;
+            getSupportActionBar().setTitle("Edit Jenis Barang");
             t1.setText(masterJenisBarang.getNama_master_jenis_barang());
             t2.setText(String.valueOf(masterJenisBarang.getHarga()));
             button.setText("Edit");
@@ -69,8 +74,7 @@ public class TambahEditJenisBarang extends AppCompatActivity {
         showDataSpinnerBarang();
         showDataSpinnerSatuan();
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
 
 
@@ -249,5 +253,11 @@ public class TambahEditJenisBarang extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

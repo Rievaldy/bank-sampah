@@ -59,6 +59,7 @@ public class MasterSatuanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_satuan);
 
+        getSupportActionBar().setTitle("Master Satuan Barang");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -106,7 +107,8 @@ public class MasterSatuanActivity extends AppCompatActivity {
         satuanAdapter.setOnCallBack(new SatuanAdapter.OnCallBack() {
             @Override
             public void onTblHapus(SatuanModel satuanModel) {
-                hapusData(satuanModel);
+                //todo hapus to risky to use it
+//                hapusData(satuanModel);
             }
 
             @Override
@@ -307,6 +309,12 @@ public class MasterSatuanActivity extends AppCompatActivity {
 
     public interface onGenerateKodeListener{
         void onSuccess(String noSatuan, boolean hasSimiliarName);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

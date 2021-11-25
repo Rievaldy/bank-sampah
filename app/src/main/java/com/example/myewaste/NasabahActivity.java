@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.example.myewaste.Util.convertToRupiah;
 import static com.example.myewaste.Util.increseNumber;
 import static com.example.myewaste.Util.showMessage;
 
@@ -43,12 +44,15 @@ public class NasabahActivity extends AppCompatActivity {
     private Button btnPenarikan;
     private static final String DEFAULT_EXTRAS_NAME = "USER_DATA_EXTRAS";
     private ActivityResultLauncher intentLaunch;
+    private SessionManagement sessionManagement;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nasabah);
+
+        getSupportActionBar().setTitle("Nasabah");
 
         if(getIntent().getParcelableExtra(DEFAULT_EXTRAS_NAME) != null) userData = getIntent().getParcelableExtra(DEFAULT_EXTRAS_NAME);
 
@@ -61,6 +65,7 @@ public class NasabahActivity extends AppCompatActivity {
         cv_laporan_saldo_nasabah = findViewById(R.id.cv_laporan_saldo_nasabah);
         logout = findViewById(R.id.btnlogoutn);
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        sessionManagement = new SessionManagement(getApplicationContext());
 
         loadData();
 
@@ -93,6 +98,7 @@ public class NasabahActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sessionManagement.removeUserSession();
                 Intent keluar = new Intent(NasabahActivity.this, Login.class);
                 keluar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(keluar);
@@ -120,7 +126,7 @@ public class NasabahActivity extends AppCompatActivity {
         saldoReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tvTotalSaldo.setText(String.valueOf(snapshot.getValue(int.class)));
+                tvTotalSaldo.setText(convertToRupiah(snapshot.getValue(int.class)));
             }
 
             @Override

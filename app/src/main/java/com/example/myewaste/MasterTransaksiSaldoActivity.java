@@ -40,12 +40,18 @@ public class MasterTransaksiSaldoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaksi_saldo);
 
+        getSupportActionBar().setTitle("Master Transaksi Saldo");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         recyclerView = findViewById(R.id.recycler_view_transaksi_saldo);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         btnDownloadExcel = findViewById(R.id.btnDownloadExclLaporanSaldo);
         sessionManagement = new SessionManagement(getApplicationContext());
+
+        if(!getRegisterCode(sessionManagement.getUserSession()).toLowerCase().equals("sa")){
+            btnDownloadExcel.setVisibility(View.GONE);
+        }
 
         listener = new MasterTransaksiSaldoActivity.MasterSaldoListener() {
             @Override
@@ -106,6 +112,12 @@ public class MasterTransaksiSaldoActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public interface MasterSaldoListener{

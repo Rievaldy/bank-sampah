@@ -57,6 +57,7 @@ public class MasterJenisBarangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_jenis_barang);
 
+        getSupportActionBar().setTitle("Master Jenis Barang");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -72,7 +73,8 @@ public class MasterJenisBarangActivity extends AppCompatActivity {
 
             @Override
             public void onClickDelete(MasterJenisBarang masterJenisBarang) {
-                hapusData(masterJenisBarang);
+                //todo delete to risky to use it
+                //hapusData(masterJenisBarang);
             }
 
             @Override
@@ -179,6 +181,12 @@ public class MasterJenisBarangActivity extends AppCompatActivity {
         void onClickDelete(MasterJenisBarang masterJenisBarang);
         void onClickUpdate(MasterJenisBarang masterJenisBarang);
         void onClickOpenDetailJenisBarang(MasterJenisBarang masterJenisBarang);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

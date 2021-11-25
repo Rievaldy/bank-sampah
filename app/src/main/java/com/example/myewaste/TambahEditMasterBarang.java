@@ -75,12 +75,15 @@ public class TambahEditMasterBarang extends AppCompatActivity {
         ivFotoBarang = (ImageView) findViewById(R.id.ivFotoBarang);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
+
+        getSupportActionBar().setTitle("Tambah Master Barang");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         if(intent.getParcelableExtra(PACKAGE_MESSAGE) != null){
             masterBarang = intent.getParcelableExtra(PACKAGE_MESSAGE);
+            getSupportActionBar().setTitle("Edit Master Barang");
             loadDataFromPackage();
         }
 
@@ -314,4 +317,11 @@ public class TambahEditMasterBarang extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }

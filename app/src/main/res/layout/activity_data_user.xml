@@ -45,6 +45,23 @@
         tools:listitem="@layout/list_item_user" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:visibility="gone"
+        android:id="@+id/btn_downloadDataNasabah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:clickable="true"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_addnasabah"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_addnasabah"
+        app:layout_constraintVertical_bias="0.0"
+        app:maxImageSize="55dp"
+        app:srcCompat="@drawable/ic_baseline_arrow_downward_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_addnasabah"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

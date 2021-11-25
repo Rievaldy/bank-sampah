@@ -28,11 +28,15 @@ public class TellerActivity extends AppCompatActivity implements View.OnClickLis
     private TextView tvNoregis, tvNamaUser;
     private static final String DEFAULT_EXTRAS_NAME = "USER_DATA_EXTRAS";
     private ActivityResultLauncher intentLaunch;
+    private SessionManagement sessionManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teller);
+
+        getSupportActionBar().setTitle("Teller");
+
 
         if(getIntent().getParcelableExtra(DEFAULT_EXTRAS_NAME) != null) {
             userData = getIntent().getParcelableExtra(Login.DEFAULT_EXTRAS_NAME);
@@ -45,6 +49,7 @@ public class TellerActivity extends AppCompatActivity implements View.OnClickLis
 
         logout = findViewById(R.id.btnlogoutteller);
         mAuth = FirebaseAuth.getInstance();
+        sessionManagement = new SessionManagement(getApplicationContext());
 
 
         input_teller.setOnClickListener(this);
@@ -99,6 +104,7 @@ public class TellerActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(cv_laporan_saldo_teller);
                 break;
             case R.id.btnlogoutteller:
+                sessionManagement.removeUserSession();
                 Intent keluar = new Intent(this, Login.class);
                 keluar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(keluar);

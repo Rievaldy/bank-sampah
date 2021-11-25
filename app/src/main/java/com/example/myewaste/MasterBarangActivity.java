@@ -39,6 +39,7 @@ public class MasterBarangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_barang);
 
+        getSupportActionBar().setTitle("Master Barang");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -54,13 +55,19 @@ public class MasterBarangActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     private void loadRecycleView(){
         rvMasterBarang = (RecyclerView) findViewById(R.id.rvMasterBarang);
         rvMasterBarang.setNestedScrollingEnabled(false);
         listMasterBarang = new ArrayList<>();
         barangAdapter = new DataBarangAdapter(this, listMasterBarang);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MasterBarangActivity.this, 2);
-        rvMasterBarang.setHasFixedSize(true);
+        //rvMasterBarang.setHasFixedSize(true);
         rvMasterBarang.setLayoutManager(layoutManager);
         rvMasterBarang.setAdapter(barangAdapter);
 

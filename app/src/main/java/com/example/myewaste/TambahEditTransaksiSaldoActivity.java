@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.example.myewaste.Util.convertToRupiah;
 import static com.example.myewaste.Util.increseNumber;
 import static com.example.myewaste.Util.showMessage;
 
@@ -50,7 +51,12 @@ public class TambahEditTransaksiSaldoActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         sessionManagement = new SessionManagement(getApplicationContext());
 
+        getSupportActionBar().setTitle("Tarik Saldo Saya");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if(getIntent().hasExtra("EXTRA_TRANSAKSI_SALDO")){
+            getSupportActionBar().setTitle("Edit Transaksi Saldo");
             mode = 1;
             transaksiSaldo = getIntent().getParcelableExtra("EXTRA_TRANSAKSI_SALDO");
             jumlahPenarikan.setText(String.valueOf(transaksiSaldo.getJumlah_transaksi()));
@@ -90,12 +96,12 @@ public class TambahEditTransaksiSaldoActivity extends AppCompatActivity {
                     if(!jumlahPenarikan.getText().toString().isEmpty()){
                         setPotonganAndTotal(Integer.valueOf(jumlahPenarikan.getText().toString()));
                     }else{
-                        tvPotongan.setText("Rp. "+0);
-                        tvtotal.setText("Rp. "+0);
+                        tvPotongan.setText(convertToRupiah(0));
+                        tvtotal.setText(convertToRupiah(0));
                     }
                 }else{
-                    tvPotongan.setText("Rp. "+0);
-                    tvtotal.setText("Rp. "+0);
+                    tvPotongan.setText(convertToRupiah(0));
+                    tvtotal.setText(convertToRupiah(0));
                 }
             }
 
@@ -110,8 +116,8 @@ public class TambahEditTransaksiSaldoActivity extends AppCompatActivity {
         int potongan = (jumlahPenarikan*10)/100;
         int total = jumlahPenarikan - potongan;
 
-        tvPotongan.setText("Rp. "+ potongan);
-        tvtotal.setText("Rp. "+ total);
+        tvPotongan.setText(convertToRupiah(potongan));
+        tvtotal.setText(convertToRupiah(total));
     }
 
     private void getSaldoNasabah(){
@@ -121,9 +127,9 @@ public class TambahEditTransaksiSaldoActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 saldoNasabah = snapshot.getValue(int.class);
                 if(mode == 0){
-                    tvSaldo.setText("Rp. "+snapshot.getValue(int.class));
+                    tvSaldo.setText(convertToRupiah(snapshot.getValue(int.class)));
                 }else{
-                    tvSaldo.setText("Rp. "+snapshot.getValue(int.class) + "+ (Rp. "+ transaksiSaldo.getJumlah_transaksi() + " )");
+                    tvSaldo.setText(convertToRupiah(snapshot.getValue(int.class)) + " + "+ convertToRupiah(transaksiSaldo.getJumlah_transaksi()));
                     saldoNasabah = saldoNasabah + transaksiSaldo.getJumlah_transaksi();
                 }
             }
@@ -197,5 +203,11 @@ public class TambahEditTransaksiSaldoActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

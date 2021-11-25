@@ -73,9 +73,9 @@ public class TambahEditTransaksi extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tambah_input_teller);
 
+        getSupportActionBar().setTitle("Tambah Transaksi Barang");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         spinnerNasabah = findViewById(R.id.spin_nasabah);
         namaBarang = findViewById(R.id.tv_nama_barang);
@@ -89,6 +89,7 @@ public class TambahEditTransaksi extends AppCompatActivity {
         sessionManagement = new SessionManagement(getApplicationContext());
         transaksiSaldo = new TransaksiSaldo();
         if(getIntent().hasExtra("EXTRA_TRANSAKSI_BARANG")){
+            getSupportActionBar().setTitle("Edit Transaksi Barang");
             masterTransaksi = getIntent().getParcelableExtra("EXTRA_TRANSAKSI_BARANG");
             mode = 1;
             jumlahBarang.setText(String.valueOf(masterTransaksi.getJumlah()));
@@ -139,7 +140,7 @@ public class TambahEditTransaksi extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                if(!(String.valueOf(charSequence).equals(""))){
+                if(!(String.valueOf(charSequence).equals("")) && !harga.getText().toString().equals("")){
                     setTotalHarga();
                 }
             }
@@ -432,5 +433,11 @@ public class TambahEditTransaksi extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

@@ -53,7 +53,16 @@ public class DetailMasterBarang extends AppCompatActivity {
         btnDetailEditBarang = (LinearLayout) findViewById(R.id.btnDetailEditBarang);
         btnDetailEditBarang.setOnClickListener(view -> doEditBarang());
         btnDetailHapusBarang = (LinearLayout) findViewById(R.id.btnDetailHapusBarang);
-        btnDetailHapusBarang.setOnClickListener(view -> showConfirmDeleteDialog());
+
+
+        getSupportActionBar().setTitle("Detail Mater Barang");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        btnDetailHapusBarang.setOnClickListener(view -> {
+            //todo delete to risky to use it
+//            showConfirmDeleteDialog();
+        });
 
     }
 
@@ -123,6 +132,12 @@ public class DetailMasterBarang extends AppCompatActivity {
                         dialogInterface.dismiss();
                     }
                 }).show();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

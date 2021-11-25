@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.example.myewaste.Util.convertToRupiah;
 import static com.example.myewaste.Util.loadImage;
 
 public class DetailActivityJenisBarang extends AppCompatActivity {
@@ -48,6 +49,10 @@ public class DetailActivityJenisBarang extends AppCompatActivity {
         btnEdit = findViewById(R.id.btn_edit_djb);
         btnHapus = findViewById(R.id.btn_hapus_djb);
 
+        getSupportActionBar().setTitle("Detail Jenis Barang");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         referenceBarang = FirebaseDatabase.getInstance().getReference("barang");
         referenceSatuan = FirebaseDatabase.getInstance().getReference("satuan_barang");
         jenisBarangReference  = FirebaseDatabase.getInstance().getReference("jenis_barang");
@@ -63,7 +68,8 @@ public class DetailActivityJenisBarang extends AppCompatActivity {
         btnHapus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hapusData(masterJenisBarang);
+                //todo delete to risky to use it
+//                hapusData(masterJenisBarang);
             }
         });
 
@@ -71,7 +77,7 @@ public class DetailActivityJenisBarang extends AppCompatActivity {
 
     private void initializeData(){
         tvNamaJenisBarang.setText(masterJenisBarang.getNama_master_jenis_barang());
-        tvHarga.setText(String.valueOf(masterJenisBarang.getHarga()));
+        tvHarga.setText(convertToRupiah(masterJenisBarang.getHarga()));
         loadDataBarang();
         loadDataSatuan();
     }
@@ -124,5 +130,11 @@ public class DetailActivityJenisBarang extends AppCompatActivity {
         intent.putExtra("EXTRAS_JENIS_BARANG", jenisBarang);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

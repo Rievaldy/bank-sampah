@@ -58,6 +58,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.example.myewaste.Util.convertToRupiah;
 import static com.example.myewaste.Util.getRegisterCode;
 import static com.example.myewaste.Util.showMessage;
 
@@ -84,12 +85,21 @@ public class SettingDownloadExcel extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_download_excel);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         layoutStart = findViewById(R.id.layout_tanggal_start);
         layoutEnd = findViewById(R.id.layout_tanggal_end);
         etStart = findViewById(R.id.et_tanggalStart);
         etEnd = findViewById(R.id.et_tanggalEnd);
         download = findViewById(R.id.downloadNow);
         mode = getIntent().getIntExtra("mode",0);
+        if(mode == 0){
+            getSupportActionBar().setTitle("Export Laporan Barang");
+        }else{
+            getSupportActionBar().setTitle("Export Laporan Saldo");
+        }
 
         layoutStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -376,7 +386,17 @@ public class SettingDownloadExcel extends AppCompatActivity {
     }
 
     private void createExcelFileReportSaldo(){
-        File filePath = new File(Environment.getExternalStorageDirectory() + File.separator + "laporan_transaksi_saldo.xls");
+        File filePath = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "MyEwaste");
+
+        if(!filePath.exists()){
+            if(filePath.mkdir()){
+                filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_saldo_"+System.currentTimeMillis()+".xls");
+            }else{
+                showMessage(SettingDownloadExcel.this, "Failed To make Directory");
+            }
+        }else{
+            filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_saldo_"+System.currentTimeMillis()+".xls");
+        }
         //todo create new workbook
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
         //todo create new worksheet
@@ -406,33 +426,33 @@ public class SettingDownloadExcel extends AppCompatActivity {
         cellTitleIdTransaksi.setCellStyle(cellStyle);
         cellTitleIdTransaksi.setCellValue("Id Transaksi");
 
-        HSSFCell cellNamaNasabah = rowTitle.createCell(2);
-        cellNamaNasabah.setCellStyle(cellStyle);
-        cellNamaNasabah.setCellValue("Nama Nasabah");
+        HSSFCell cellTanggalTransaksi = rowTitle.createCell(2);
+        cellTanggalTransaksi.setCellStyle(cellStyle);
+        cellTanggalTransaksi.setCellValue("Tanggal Transaksi");
 
         HSSFCell cellNamaTeller = rowTitle.createCell(3);
         cellNamaTeller.setCellStyle(cellStyle);
         cellNamaTeller.setCellValue("Nama Teller");
 
-        HSSFCell cellJumlahPenimbangan = rowTitle.createCell(4);
+        HSSFCell cellNamaNasabah = rowTitle.createCell(4);
+        cellNamaNasabah.setCellStyle(cellStyle);
+        cellNamaNasabah.setCellValue("Nama Nasabah");
+
+        HSSFCell cellJumlahPenimbangan = rowTitle.createCell(5);
         cellJumlahPenimbangan.setCellStyle(cellStyle);
         cellJumlahPenimbangan.setCellValue("Penimbangan");
 
-        HSSFCell cellJumlahPenarikan = rowTitle.createCell(5);
+        HSSFCell cellJumlahPenarikan = rowTitle.createCell(6);
         cellJumlahPenarikan.setCellStyle(cellStyle);
         cellJumlahPenarikan.setCellValue("Penarikan");
 
-        HSSFCell cellPotongan = rowTitle.createCell(6);
+        HSSFCell cellPotongan = rowTitle.createCell(7);
         cellPotongan.setCellStyle(cellStyle);
         cellPotongan.setCellValue("Potongan");
 
-        HSSFCell cellTotalDapat = rowTitle.createCell(7);
+        HSSFCell cellTotalDapat = rowTitle.createCell(8);
         cellTotalDapat.setCellStyle(cellStyle);
         cellTotalDapat.setCellValue("Total Didapatkan");
-
-        HSSFCell cellTanggalTransaksi = rowTitle.createCell(8);
-        cellTanggalTransaksi.setCellStyle(cellStyle);
-        cellTanggalTransaksi.setCellValue("Tanggal Transaksi");
 
         int totalPotongan = 0;
         int totalPenerimaanBarang = 0;
@@ -456,66 +476,61 @@ public class SettingDownloadExcel extends AppCompatActivity {
             cellDataIdTransaksi.setCellStyle(cellStyle);
             cellDataIdTransaksi.setCellValue(transaksiSaldoArrayList.get(i-2).getId_transaksi_saldo());
 
-
-            HSSFCell cellDataNamaNasabah = rowData.createCell(2);
-            cellDataNamaNasabah.setCellStyle(cellStyle);
-            cellDataNamaNasabah.setCellValue(dataNasabah.getNama());
+            HSSFCell cellDataTanggalTransaksi = rowData.createCell(2);
+            cellDataTanggalTransaksi.setCellStyle(cellStyle);
+            cellDataTanggalTransaksi.setCellValue(tanggalTransaksi);
 
             HSSFCell cellDataNamaTeller = rowData.createCell(3);
             cellDataNamaTeller.setCellStyle(cellStyle);
             cellDataNamaTeller.setCellValue(dataTeller.getNama());
 
+            HSSFCell cellDataNamaNasabah = rowData.createCell(4);
+            cellDataNamaNasabah.setCellStyle(cellStyle);
+            cellDataNamaNasabah.setCellValue(dataNasabah.getNama());
 
-            HSSFCell cellDataJumlahPenimbangan = rowData.createCell(4);
+            HSSFCell cellDataJumlahPenimbangan = rowData.createCell(5);
             cellDataJumlahPenimbangan.setCellStyle(cellStyle);
 
-            HSSFCell cellDataJumlahPenarikan = rowData.createCell(5);
+            HSSFCell cellDataJumlahPenarikan = rowData.createCell(6);
             cellDataJumlahPenarikan.setCellStyle(cellStyle);
 
             if(transaksiSaldoArrayList.get(i-2).getJenis_transaksi().equals("SETOR")){
-                cellDataJumlahPenimbangan.setCellValue("Rp. "+ transaksiSaldoArrayList.get(i-2).getJumlah_transaksi());
-                cellDataJumlahPenarikan.setCellValue("Rp. "+ 0);
+                cellDataJumlahPenimbangan.setCellValue(convertToRupiah(transaksiSaldoArrayList.get(i-2).getJumlah_transaksi()));
+                cellDataJumlahPenarikan.setCellValue(convertToRupiah(0));
                 totalPenerimaanBarang+= transaksiSaldoArrayList.get(i-2).getJumlah_transaksi();
             }else{
-                cellDataJumlahPenimbangan.setCellValue("Rp."+0);
-                cellDataJumlahPenarikan.setCellValue("Rp. "+ transaksiSaldoArrayList.get(i-2).getJumlah_transaksi());
+                cellDataJumlahPenimbangan.setCellValue(convertToRupiah(0));
+                cellDataJumlahPenarikan.setCellValue(convertToRupiah(transaksiSaldoArrayList.get(i-2).getJumlah_transaksi()));
                 totalTarikSaldo+= transaksiSaldoArrayList.get(i-2).getJumlah_transaksi();
             }
 
-            HSSFCell cellDataPotongan = rowData.createCell(6);
+            HSSFCell cellDataPotongan = rowData.createCell(7);
             cellDataPotongan.setCellStyle(cellStyle);
-            cellDataPotongan.setCellValue("Rp. "+ transaksiSaldoArrayList.get(i-2).getPotongan());
+            cellDataPotongan.setCellValue(convertToRupiah(transaksiSaldoArrayList.get(i-2).getPotongan()));
             totalPotongan+= transaksiSaldoArrayList.get(i-2).getPotongan();
 
-            HSSFCell cellDataTotalDapat = rowData.createCell(7);
+            HSSFCell cellDataTotalDapat = rowData.createCell(8);
             cellDataTotalDapat.setCellStyle(cellStyle);
-            cellDataTotalDapat.setCellValue("Rp. "+ (transaksiSaldoArrayList.get(i-2).getJumlah_transaksi() - transaksiSaldoArrayList.get(i-2).getPotongan()));
+            cellDataTotalDapat.setCellValue(convertToRupiah(transaksiSaldoArrayList.get(i-2).getJumlah_transaksi() - transaksiSaldoArrayList.get(i-2).getPotongan()));
 
-            HSSFCell cellDataTanggalTransaksi = rowData.createCell(8);
-            cellDataTanggalTransaksi.setCellStyle(cellStyle);
-            cellDataTanggalTransaksi.setCellValue(tanggalTransaksi);
         }
 
-
-        Log.d("TAG", "createExcelFileReportSaldo: " + transaksiSaldoArrayList.size());
         HSSFRow hssfRowTotal = hssfSheet.createRow(transaksiSaldoArrayList.size() + 2);
-        HSSFCell titleTotal = hssfRowTotal.createCell(1);
+        HSSFCell titleTotal = hssfRowTotal.createCell(0);
         titleTotal.setCellStyle(cellStyle);
         titleTotal.setCellValue("Total");
 
-        HSSFCell cellTotalPenimbangan = hssfRowTotal.createCell(4);
+        HSSFCell cellTotalPenimbangan = hssfRowTotal.createCell(5);
         cellTotalPenimbangan.setCellStyle(cellStyle);
-        cellTotalPenimbangan.setCellValue("Rp. "+totalPenerimaanBarang);
+        cellTotalPenimbangan.setCellValue(convertToRupiah(totalPenerimaanBarang));
 
-        HSSFCell cellTotalPenarikan = hssfRowTotal.createCell(5);
+        HSSFCell cellTotalPenarikan = hssfRowTotal.createCell(6);
         cellTotalPenarikan.setCellStyle(cellStyle);
-        cellTotalPenarikan.setCellValue("Rp. "+totalTarikSaldo);
+        cellTotalPenarikan.setCellValue(convertToRupiah(totalTarikSaldo));
 
-        HSSFCell cellTotalPotongan = hssfRowTotal.createCell(6);
+        HSSFCell cellTotalPotongan = hssfRowTotal.createCell(7);
         cellTotalPotongan.setCellStyle(cellStyle);
-        cellTotalPotongan.setCellValue("Rp. "+totalPotongan);
-
-
+        cellTotalPotongan.setCellValue(convertToRupiah(totalPotongan));
 
         try{
             if(!filePath.exists()){
@@ -537,7 +552,17 @@ public class SettingDownloadExcel extends AppCompatActivity {
     }
 
     private void createExcelFileReportBarang(){
-        File filePath = new File(Environment.getExternalStorageDirectory() + File.separator + "laporan_transaksi_barang.xls");
+        File filePath = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "MyEwaste");
+
+        if(!filePath.exists()){
+            if(filePath.mkdir()){
+                filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_barang_"+System.currentTimeMillis()+".xls");
+            }else{
+                showMessage(SettingDownloadExcel.this, "Failed To make Directory");
+            }
+        }else{
+            filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_barang_"+System.currentTimeMillis()+".xls");
+        }
         //todo create new workbook
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
         //todo create new worksheet
@@ -567,41 +592,42 @@ public class SettingDownloadExcel extends AppCompatActivity {
         cellTitleIdTransaksi.setCellStyle(cellStyle);
         cellTitleIdTransaksi.setCellValue("Id Transaksi");
 
-        HSSFCell cellTitleBarang = rowTitle.createCell(2);
+        HSSFCell cellTanggalTransaksi = rowTitle.createCell(2);
+        cellTanggalTransaksi.setCellStyle(cellStyle);
+        cellTanggalTransaksi.setCellValue("Tanggal Transaksi");
+
+        HSSFCell cellTitleBarang = rowTitle.createCell(3);
         cellTitleBarang.setCellStyle(cellStyle);
         cellTitleBarang.setCellValue("Barang");
 
-        HSSFCell cellTitleJenisBarang = rowTitle.createCell(3);
+        HSSFCell cellTitleJenisBarang = rowTitle.createCell(4);
         cellTitleJenisBarang.setCellStyle(cellStyle);
         cellTitleJenisBarang.setCellValue("Jenis Barang");
-
-        HSSFCell cellNamaNasabah = rowTitle.createCell(4);
-        cellNamaNasabah.setCellStyle(cellStyle);
-        cellNamaNasabah.setCellValue("Nama Nasabah");
 
         HSSFCell cellNamaTeller = rowTitle.createCell(5);
         cellNamaTeller.setCellStyle(cellStyle);
         cellNamaTeller.setCellValue("Nama Teller");
 
-        HSSFCell cellJumlah = rowTitle.createCell(6);
+        HSSFCell cellNamaNasabah = rowTitle.createCell(6);
+        cellNamaNasabah.setCellStyle(cellStyle);
+        cellNamaNasabah.setCellValue("Nama Nasabah");
+
+        HSSFCell cellJumlah = rowTitle.createCell(7);
         cellJumlah.setCellStyle(cellStyle);
-        cellJumlah.setCellValue("Jumlah");
+        cellJumlah.setCellValue("Jumlah Barang");
 
-        HSSFCell cellSatuan = rowTitle.createCell(7);
+        HSSFCell cellSatuan = rowTitle.createCell(8);
         cellSatuan.setCellStyle(cellStyle);
-        cellSatuan.setCellValue("Satuan");
+        cellSatuan.setCellValue("Satuan Barang");
 
-        HSSFCell HargaBarang = rowTitle.createCell(8);
+        HSSFCell HargaBarang = rowTitle.createCell(9);
         HargaBarang.setCellStyle(cellStyle);
         HargaBarang.setCellValue("Harga Barang");
 
-        HSSFCell cellTotal = rowTitle.createCell(9);
+        HSSFCell cellTotal = rowTitle.createCell(10);
         cellTotal.setCellStyle(cellStyle);
         cellTotal.setCellValue("Total");
 
-        HSSFCell cellTanggalTransaksi = rowTitle.createCell(10);
-        cellTanggalTransaksi.setCellStyle(cellStyle);
-        cellTanggalTransaksi.setCellValue("Tanggal Transaksi");
 
         for(int i = 2; i <= transaksiBarangArrayList.size(); i++){
 
@@ -623,42 +649,46 @@ public class SettingDownloadExcel extends AppCompatActivity {
             cellDataIdTransaksi.setCellStyle(cellStyle);
             cellDataIdTransaksi.setCellValue(transaksiBarangArrayList.get(i-2).getNo_transaksi_saldo());
 
-            HSSFCell cellDataBarang = rowData.createCell(2);
+            HSSFCell cellDataTanggalTransaksi = rowData.createCell(2);
+            cellDataTanggalTransaksi.setCellStyle(cellStyle);
+            cellDataTanggalTransaksi.setCellValue(tanggalTransaksi);
+
+            HSSFCell cellDataBarang = rowData.createCell(3);
             cellDataBarang.setCellStyle(cellStyle);
             cellDataBarang.setCellValue(masterBarang.getNama_master_barang());
 
-            HSSFCell cellDataJenisBarang = rowData.createCell(3);
+            HSSFCell cellDataJenisBarang = rowData.createCell(4);
             cellDataJenisBarang.setCellStyle(cellStyle);
             cellDataJenisBarang.setCellValue(dataJenisBarang.getNama_master_jenis_barang());
-
-            HSSFCell cellDataNamaNasabah = rowData.createCell(4);
-            cellDataNamaNasabah.setCellStyle(cellStyle);
-            cellDataNamaNasabah.setCellValue(dataNasabah.getNama());
 
             HSSFCell cellDataNamaTeller = rowData.createCell(5);
             cellDataNamaTeller.setCellStyle(cellStyle);
             cellDataNamaTeller.setCellValue(dataTeller.getNama());
 
-            HSSFCell cellDataJumlah = rowData.createCell(6);
+            HSSFCell cellDataNamaNasabah = rowData.createCell(6);
+            cellDataNamaNasabah.setCellStyle(cellStyle);
+            cellDataNamaNasabah.setCellValue(dataNasabah.getNama());
+
+
+
+            HSSFCell cellDataJumlah = rowData.createCell(7);
             cellDataJumlah.setCellStyle(cellStyle);
             cellDataJumlah.setCellValue(String.valueOf(transaksiBarangArrayList.get(i-2).getJumlah()));
 
-            HSSFCell cellDataSatuan = rowData.createCell(7);
+            HSSFCell cellDataSatuan = rowData.createCell(8);
             cellDataSatuan.setCellStyle(cellStyle);
             cellDataSatuan.setCellValue(satuanModel.getNamaSatuan());
 
-            HSSFCell cellDataHargaBarang = rowData.createCell(8);
+            HSSFCell cellDataHargaBarang = rowData.createCell(9);
             cellDataHargaBarang.setCellStyle(cellStyle);
-            cellDataHargaBarang.setCellValue("Rp. "+ dataJenisBarang.getHarga());
+            cellDataHargaBarang.setCellValue(convertToRupiah(dataJenisBarang.getHarga()));
 
-            HSSFCell cellDataTotal = rowData.createCell(9);
+            HSSFCell cellDataTotal = rowData.createCell(10);
             cellDataTotal.setCellStyle(cellStyle);
-            cellDataTotal.setCellValue("Rp. "+ transaksiBarangArrayList.get(i-2).getTotal_harga());
+            cellDataTotal.setCellValue(convertToRupiah(transaksiBarangArrayList.get(i-2).getTotal_harga()));
 
-            HSSFCell cellDataTanggalTransaksi = rowData.createCell(10);
-            cellDataTanggalTransaksi.setCellStyle(cellStyle);
-            cellDataTanggalTransaksi.setCellValue(tanggalTransaksi);
         }
+        Log.d("TAG", "createExcelFileReportBarang: " + filePath.getAbsolutePath());
 
         try{
             if(!filePath.exists()){

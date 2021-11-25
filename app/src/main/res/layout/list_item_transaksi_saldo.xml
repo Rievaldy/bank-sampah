@@ -44,7 +44,7 @@
             android:layout_alignParentEnd="true"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/accepted"/>
+            android:src="@drawable/rejected"/>
 
         <ImageView
             android:layout_margin="5dp"
@@ -53,7 +53,7 @@
             android:layout_alignParentEnd="true"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/rejected"/>
+            android:src="@drawable/accepted"/>
 
     </RelativeLayout>
 

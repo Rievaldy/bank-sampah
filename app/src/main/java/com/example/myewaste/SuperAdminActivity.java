@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.example.myewaste.model.UserData;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +39,7 @@ public class SuperAdminActivity extends AppCompatActivity implements View.OnClic
     private UserData userData;
     private static final String TAG = "SuperAdminActivity";
     ActivityResultLauncher<Intent> intentLaunch;
+    private SessionManagement sessionManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +65,16 @@ public class SuperAdminActivity extends AppCompatActivity implements View.OnClic
         data_super_admin = findViewById(R.id.cv_data_super_admin);
         logout = findViewById(R.id.btnlogoutsa);
         mAuth = FirebaseAuth.getInstance();
+
+        getSupportActionBar().setTitle("Super Admin");
+
         intentLaunch = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     userData = result.getData().getParcelableExtra(ProfilUser.DEFAULT_EXTRAS_NAME);
                     refreshData();
         });
+
+        sessionManagement = new SessionManagement(getApplicationContext());
 
         iv_profil.setOnClickListener(this);
         master_barang.setOnClickListener(this);
@@ -133,7 +140,8 @@ public class SuperAdminActivity extends AppCompatActivity implements View.OnClic
                 startActivity(cv_data_super_admin);
                 break;
             case R.id.btnlogoutsa:
-                    mAuth.signOut();
+                mAuth.signOut();
+                sessionManagement.removeUserSession();
                 Intent keluar = new Intent(this, Login.class);
                 keluar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(keluar);

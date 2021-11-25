@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.Arrays;
+
 public class Util {
     public static final String DEFAULT_KODE_BARANG = "J-0001";
     public static final String DEFAULT_KODE_TELLER = "T-0001";
@@ -53,6 +55,23 @@ public class Util {
         }
         digit.append(newVal);
         return split[0].toUpperCase()+"-"+digit;
+    }
+
+    public static String convertToRupiah(int balance){
+        String balanceOnString = String.valueOf(balance);
+        String[] arrBalance = balanceOnString.split("(?=(?:...)*$)");
+        String newBalance = "Rp. ";
+        for(int i = 0; i < arrBalance.length; i++){
+            if(!arrBalance[i].equals("")){
+                newBalance+=arrBalance[i];
+                if(i != arrBalance.length-1){
+                    newBalance+=".";
+                }
+            }
+        }
+
+
+        return newBalance;
     }
 
     public static void loadImage(String imageSource, ImageView bindOn, Context context){
