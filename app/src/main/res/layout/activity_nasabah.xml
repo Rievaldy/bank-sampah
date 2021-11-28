@@ -29,30 +29,47 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:textColor="@color/purple_500"
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="Nama : "
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_fotonasabah"
+                app:layout_constraintStart_toEndOf="@+id/iv_fotonasabah"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.285" />
+
+            <TextView
                 android:id="@+id/et_nama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
                 android:fontFamily="sans-serif"
                 android:text="Nama User Login"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/iv_fotonasabah"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toBottomOf="@+id/textView"
+                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="@+id/textView" />
 
             <TextView
-                android:textColor="@color/purple_500"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID            : "
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/iv_fotonasabah"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:textStyle="bold"
                 android:id="@+id/et_noregis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
                 android:text="No Regis"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/iv_fotonasabah"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/et_nama"
                 app:layout_constraintTop_toBottomOf="@+id/et_nama" />
 
 
@@ -64,16 +81,30 @@
             android:layout_width="match_parent"
             android:layout_marginVertical="5dp"
             android:orientation="horizontal">
-            <TextView
-                android:textColor="@color/purple_500"
-                android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="5dp"
-                android:id="@+id/totalsaldo"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Saldo Nasabah"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:orientation="vertical">
+                <TextView
+                    android:textColor="@color/purple_500"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Saldo Saya :"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:textColor="@color/purple_500"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="5dp"
+                    android:id="@+id/totalsaldo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Saldo Nasabah"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
 
             <View
                 android:layout_width="0dp"
@@ -83,10 +114,9 @@
 
             <Button
                 android:id="@+id/btnPenarikan"
-                android:gravity="right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end|center"
                 android:layout_marginHorizontal="5dp"
                 android:text="Lakukan Penarikan"
                 android:textColor="@color/white" />
