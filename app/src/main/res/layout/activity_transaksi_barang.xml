@@ -42,6 +42,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.97"
-        app:maxImageSize="55dp"
-        app:srcCompat="@drawable/ic_baseline_arrow_downward_24" />
+        app:maxImageSize="35dp"
+        app:srcCompat="@drawable/download"  />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,7 +56,7 @@ public class TambahEditTransaksiSaldoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(getIntent().hasExtra("EXTRA_TRANSAKSI_SALDO")){
-            getSupportActionBar().setTitle("Edit Transaksi Saldo");
+            getSupportActionBar().setTitle("Edit Penarikan Nasabah");
             mode = 1;
             transaksiSaldo = getIntent().getParcelableExtra("EXTRA_TRANSAKSI_SALDO");
             jumlahPenarikan.setText(String.valueOf(transaksiSaldo.getJumlah_transaksi()));

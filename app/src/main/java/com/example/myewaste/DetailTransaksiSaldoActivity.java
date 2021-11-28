@@ -49,7 +49,7 @@ public class DetailTransaksiSaldoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_transaksi_saldo);
 
-        getSupportActionBar().setTitle("Detail Transaksi Saldo");
+        getSupportActionBar().setTitle("Detail Transaksi Penarikan");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

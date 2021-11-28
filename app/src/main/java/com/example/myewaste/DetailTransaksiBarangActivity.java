@@ -49,7 +49,7 @@ public class DetailTransaksiBarangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_transaksi_barang);
 
-        getSupportActionBar().setTitle("Detail Transaksi Barang");
+        getSupportActionBar().setTitle("Detail Transaksi Penimbangan");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

@@ -33,7 +33,6 @@
 
 
         <activity  android:name=".ProfilUser" />
-        <activity android:name=".LaporanTransaksiSA" />
         <activity android:name=".DataUserActivity" />
         <activity android:name=".NasabahActivity" />
         <activity android:name=".TellerActivity" />

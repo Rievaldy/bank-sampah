@@ -37,7 +37,7 @@ public class MasterTransaksiBarangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaksi_barang);
 
-        getSupportActionBar().setTitle("Master Transaksi Barang");
+        getSupportActionBar().setTitle("Data Transaksi Penimbangan");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

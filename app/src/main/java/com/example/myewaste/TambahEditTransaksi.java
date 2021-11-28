@@ -73,7 +73,7 @@ public class TambahEditTransaksi extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tambah_input_teller);
 
-        getSupportActionBar().setTitle("Tambah Transaksi Barang");
+        getSupportActionBar().setTitle("Input Penimbangan Barang");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -89,7 +89,7 @@ public class TambahEditTransaksi extends AppCompatActivity {
         sessionManagement = new SessionManagement(getApplicationContext());
         transaksiSaldo = new TransaksiSaldo();
         if(getIntent().hasExtra("EXTRA_TRANSAKSI_BARANG")){
-            getSupportActionBar().setTitle("Edit Transaksi Barang");
+            getSupportActionBar().setTitle("Edit Penimbangan Barang");
             masterTransaksi = getIntent().getParcelableExtra("EXTRA_TRANSAKSI_BARANG");
             mode = 1;
             jumlahBarang.setText(String.valueOf(masterTransaksi.getJumlah()));

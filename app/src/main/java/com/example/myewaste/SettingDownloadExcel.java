@@ -96,9 +96,9 @@ public class SettingDownloadExcel extends AppCompatActivity {
         download = findViewById(R.id.downloadNow);
         mode = getIntent().getIntExtra("mode",0);
         if(mode == 0){
-            getSupportActionBar().setTitle("Export Laporan Barang");
+            getSupportActionBar().setTitle("Export Laporan Penimbangan Barang");
         }else{
-            getSupportActionBar().setTitle("Export Laporan Saldo");
+            getSupportActionBar().setTitle("Export Laporan Transaksi Nasabah");
         }
 
         layoutStart.setOnClickListener(new View.OnClickListener() {
@@ -390,17 +390,17 @@ public class SettingDownloadExcel extends AppCompatActivity {
 
         if(!filePath.exists()){
             if(filePath.mkdir()){
-                filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_saldo_"+System.currentTimeMillis()+".xls");
+                filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_nasabah_"+System.currentTimeMillis()+".xls");
             }else{
                 showMessage(SettingDownloadExcel.this, "Failed To make Directory");
             }
         }else{
-            filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_saldo_"+System.currentTimeMillis()+".xls");
+            filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_nasabah_"+System.currentTimeMillis()+".xls");
         }
         //todo create new workbook
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
         //todo create new worksheet
-        HSSFSheet hssfSheet = hssfWorkbook.createSheet("Laporan Transaksi Saldo");
+        HSSFSheet hssfSheet = hssfWorkbook.createSheet("Laporan Transaksi Nasabah");
 
         //cell tanggal
         HSSFRow rowTanggal = hssfSheet.createRow(0);
@@ -556,17 +556,17 @@ public class SettingDownloadExcel extends AppCompatActivity {
 
         if(!filePath.exists()){
             if(filePath.mkdir()){
-                filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_barang_"+System.currentTimeMillis()+".xls");
+                filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_penimbangan_nasabah_"+System.currentTimeMillis()+".xls");
             }else{
                 showMessage(SettingDownloadExcel.this, "Failed To make Directory");
             }
         }else{
-            filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_transaksi_barang_"+System.currentTimeMillis()+".xls");
+            filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_penimbangan_nasabah_"+System.currentTimeMillis()+".xls");
         }
         //todo create new workbook
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
         //todo create new worksheet
-        HSSFSheet hssfSheet = hssfWorkbook.createSheet("Laporan Transaksi Barang");
+        HSSFSheet hssfSheet = hssfWorkbook.createSheet("Laporan Penimbangan Barang");
 
         //cell tanggal
         HSSFRow rowTanggal =hssfSheet.createRow(0);
@@ -647,7 +647,7 @@ public class SettingDownloadExcel extends AppCompatActivity {
 
             HSSFCell cellDataIdTransaksi = rowData.createCell(1);
             cellDataIdTransaksi.setCellStyle(cellStyle);
-            cellDataIdTransaksi.setCellValue(transaksiBarangArrayList.get(i-2).getNo_transaksi_saldo());
+            cellDataIdTransaksi.setCellValue(transaksiBarangArrayList.get(i-2).getNo_transaksi_barang());
 
             HSSFCell cellDataTanggalTransaksi = rowData.createCell(2);
             cellDataTanggalTransaksi.setCellStyle(cellStyle);
@@ -746,6 +746,10 @@ public class SettingDownloadExcel extends AppCompatActivity {
         return null;
     }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }

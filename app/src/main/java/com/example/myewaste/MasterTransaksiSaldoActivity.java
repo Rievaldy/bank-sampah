@@ -40,7 +40,7 @@ public class MasterTransaksiSaldoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaksi_saldo);
 
-        getSupportActionBar().setTitle("Master Transaksi Saldo");
+        getSupportActionBar().setTitle("Data Transaksi Penarikan");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
