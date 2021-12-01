@@ -30,6 +30,8 @@
         <activity android:name=".MasterBarangActivity" />
         <activity android:name=".MasterTransaksiBarangActivity" />
         <activity android:name=".MasterTransaksiSaldoActivity"/>
+        <activity android:name=".DataSaldoNasabahActivity"/>
+        <activity android:name=".DataPotonganActivity"/>
 
 
         <activity  android:name=".ProfilUser" />

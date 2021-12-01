@@ -73,7 +73,7 @@ public class SettingDownloadExcel extends AppCompatActivity {
     private ArrayList<UserData> userDataArrayList;
     private ArrayList<TransaksiBarang> transaksiBarangArrayList;
     private ArrayList<TransaksiSaldo> transaksiSaldoArrayList;
-    private int mode = 0; //0 export barang, 1 export saldo
+    private int mode = 0; //0 export barang, 1 export saldo, 2 export potongan
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -97,8 +97,10 @@ public class SettingDownloadExcel extends AppCompatActivity {
         mode = getIntent().getIntExtra("mode",0);
         if(mode == 0){
             getSupportActionBar().setTitle("Export Laporan Penimbangan Barang");
-        }else{
+        }else if(mode == 1){
             getSupportActionBar().setTitle("Export Laporan Transaksi Nasabah");
+        }else{
+            getSupportActionBar().setTitle("Export Laporan Biaya Operasional");
         }
 
         layoutStart.setOnClickListener(new View.OnClickListener() {
@@ -145,8 +147,10 @@ public class SettingDownloadExcel extends AppCompatActivity {
                         long end = changeFormat(etEnd.getText().toString());
                         if(mode == 0){
                             loadDataTransaksiBarang(start, end);
-                        }else{
+                        }else if(mode == 1){
                             loadDataTransaksiSaldo(start, end);
+                        }else{
+                            loadDataPotongan(start, end);
                         }
                     }else{
                         requestStoragePermission();
@@ -165,8 +169,10 @@ public class SettingDownloadExcel extends AppCompatActivity {
                 long end = changeFormat(etEnd.getText().toString());
                 if(mode == 0){
                     loadDataTransaksiBarang(start, end);
-                }else{
+                }else if(mode == 1){
                     loadDataTransaksiSaldo(start, end);
+                }else{
+                    loadDataPotongan(start, end);
                 }
             } else {
                 Toast.makeText(this, "Tidak Mendapatkan Hak Akses Storage",Toast.LENGTH_SHORT).show();
@@ -329,6 +335,31 @@ public class SettingDownloadExcel extends AppCompatActivity {
         });
     }
 
+    private void loadDataPotongan(long start, long end){
+        transaksiSaldoArrayList = new ArrayList<>();
+        Query transaksiSaldoQuery = reference.child("transaksi_saldo").orderByChild("tanggal_transaksi").startAt(start).endAt(end);
+        transaksiSaldoQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot data : snapshot.getChildren()) {
+                        TransaksiSaldo transaksiSaldo = data.getValue(TransaksiSaldo.class);
+                        if (transaksiSaldo.getJenis_transaksi().equals("TARIK") && transaksiSaldo.getStatus().equals("APPROVED")) {
+                            transaksiSaldoArrayList.add(transaksiSaldo);
+                        }
+                    }
+                    //todo create Excel
+                    createExcelFileReportPotongan();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
 
     private long changeFormat(String oldDateString){
@@ -383,6 +414,113 @@ public class SettingDownloadExcel extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    private void createExcelFileReportPotongan(){
+        File filePath = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "MyEwaste");
+
+        if(!filePath.exists()){
+            if(filePath.mkdir()){
+                filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_biaya_operasional_"+System.currentTimeMillis()+".xls");
+            }else{
+                showMessage(SettingDownloadExcel.this, "Failed To make Directory");
+            }
+        }else{
+            filePath = new File(filePath.getAbsolutePath() + File.separator +"laporan_biaya_operasional_"+System.currentTimeMillis()+".xls");
+        }
+        //todo create new workbook
+        HSSFWorkbook hssfWorkbook = new HSSFWorkbook();
+        //todo create new worksheet
+        HSSFSheet hssfSheet = hssfWorkbook.createSheet("Laporan Biaya Operasional");
+
+        //cell tanggal
+        HSSFRow rowTanggal = hssfSheet.createRow(0);
+        HSSFCell cellTanggal = rowTanggal.createCell(0);
+        cellTanggal.setCellValue("Tanggal :" + etStart.getText().toString() + " - " +etEnd.getText().toString());
+        hssfSheet.addMergedRegion(new CellRangeAddress(0,0,0,5));
+
+        //todo cell style
+        CellStyle cellStyle = hssfWorkbook.createCellStyle();
+        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        cellStyle.setBorderTop(CellStyle.BORDER_THIN);
+        cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
+        cellStyle.setBorderRight(CellStyle.BORDER_THIN);
+        cellStyle.setWrapText(true);
+
+        HSSFRow rowTitle = hssfSheet.createRow(1);
+        HSSFCell cellTitleNo = rowTitle.createCell(0);
+        cellTitleNo.setCellStyle(cellStyle);
+        cellTitleNo.setCellValue("NO");
+
+        HSSFCell cellTitleIdTransaksi = rowTitle.createCell(1);
+        cellTitleIdTransaksi.setCellStyle(cellStyle);
+        cellTitleIdTransaksi.setCellValue("Id Transaksi");
+
+        HSSFCell cellTanggalTransaksi = rowTitle.createCell(2);
+        cellTanggalTransaksi.setCellStyle(cellStyle);
+        cellTanggalTransaksi.setCellValue("Tanggal Transaksi");
+
+        HSSFCell cellPotongan = rowTitle.createCell(3);
+        cellPotongan.setCellStyle(cellStyle);
+        cellPotongan.setCellValue("Potongan");
+
+        int totalPotongan = 0;
+
+
+        for(int i = 2; i <= transaksiSaldoArrayList.size()+1; i++){
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            Date date = new Date(transaksiSaldoArrayList.get(i-2).getTanggal_transaksi());
+            String tanggalTransaksi = sdf.format(date);
+
+            HSSFRow rowData = hssfSheet.createRow(i);
+            HSSFCell cellDataNo = rowData.createCell(0);
+            cellDataNo.setCellStyle(cellStyle);
+            cellDataNo.setCellValue(i-1);
+
+            HSSFCell cellDataIdTransaksi = rowData.createCell(1);
+            cellDataIdTransaksi.setCellStyle(cellStyle);
+            cellDataIdTransaksi.setCellValue(transaksiSaldoArrayList.get(i-2).getId_transaksi_saldo());
+
+            HSSFCell cellDataTanggalTransaksi = rowData.createCell(2);
+            cellDataTanggalTransaksi.setCellStyle(cellStyle);
+            cellDataTanggalTransaksi.setCellValue(tanggalTransaksi);
+
+            HSSFCell cellDataPotongan = rowData.createCell(3);
+            cellDataPotongan.setCellStyle(cellStyle);
+            cellDataPotongan.setCellValue(convertToRupiah(transaksiSaldoArrayList.get(i-2).getPotongan()));
+            totalPotongan+= transaksiSaldoArrayList.get(i-2).getPotongan();
+
+        }
+
+        HSSFRow hssfRowTotal = hssfSheet.createRow(transaksiSaldoArrayList.size() + 2);
+        HSSFCell titleTotal = hssfRowTotal.createCell(0);
+        titleTotal.setCellStyle(cellStyle);
+        titleTotal.setCellValue("Total");
+
+
+        HSSFCell cellTotalPotongan = hssfRowTotal.createCell(3);
+        cellTotalPotongan.setCellStyle(cellStyle);
+        cellTotalPotongan.setCellValue(convertToRupiah(totalPotongan));
+
+        try{
+            if(!filePath.exists()){
+                filePath.createNewFile();
+            }
+
+            FileOutputStream fileOutputStream= new FileOutputStream(filePath);
+            hssfWorkbook.write(fileOutputStream);
+
+            if (fileOutputStream!=null){
+                fileOutputStream.flush();
+                fileOutputStream.close();
+                showMessage(SettingDownloadExcel.this, "Location : " +filePath.getAbsolutePath());
+                finish();
+            }
+        }catch (Exception e){
+            Log.d("TAG", "exportToExcel: " + e.getMessage());
+        }
     }
 
     private void createExcelFileReportSaldo(){
@@ -463,7 +601,7 @@ public class SettingDownloadExcel extends AppCompatActivity {
 
             UserData dataTeller = lookForNamaUser(transaksiSaldoArrayList.get(i-2).getId_penerima());
             UserData dataNasabah = lookForNamaUser(transaksiSaldoArrayList.get(i-2).getId_nasabah());
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             Date date = new Date(transaksiSaldoArrayList.get(i-2).getTanggal_transaksi());
             String tanggalTransaksi = sdf.format(date);
 
@@ -636,7 +774,7 @@ public class SettingDownloadExcel extends AppCompatActivity {
             MasterJenisBarang dataJenisBarang = lookForNamaJenisBarang(transaksiBarangArrayList.get(i-2).getNomor_jenis_barang());
             SatuanModel satuanModel = lookForSatuan(dataJenisBarang.getNo_satuan_barang());
             MasterBarang masterBarang = lookForBarang(dataJenisBarang.getNo_master_barang());
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             Date date = new Date(transaksiBarangArrayList.get(i-2).getTanggal_transaksi());
             String tanggalTransaksi = sdf.format(date);
 

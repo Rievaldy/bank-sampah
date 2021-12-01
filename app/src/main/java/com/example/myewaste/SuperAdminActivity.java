@@ -30,7 +30,10 @@ public class SuperAdminActivity extends AppCompatActivity implements View.OnClic
             laporan_saldo,
             data_nasabah,
             data_teller,
-            data_super_admin;
+            data_super_admin,
+            data_saldo_nasabah,
+            data_biaya_operasional;
+
     private TextView tvNamaUser, tvNoregis;
     Button logout;
     ImageView iv_profil;
@@ -63,6 +66,8 @@ public class SuperAdminActivity extends AppCompatActivity implements View.OnClic
         data_nasabah = findViewById(R.id.cv_data_nasabah);
         data_teller = findViewById(R.id.cv_data_teller);
         data_super_admin = findViewById(R.id.cv_data_super_admin);
+        data_saldo_nasabah = findViewById(R.id.cv_data_saldo_nasabah);
+        data_biaya_operasional = findViewById(R.id.cv_pendapatan);
         logout = findViewById(R.id.btnlogoutsa);
         mAuth = FirebaseAuth.getInstance();
 
@@ -85,6 +90,8 @@ public class SuperAdminActivity extends AppCompatActivity implements View.OnClic
         data_nasabah.setOnClickListener(this);
         data_teller.setOnClickListener(this);
         data_super_admin.setOnClickListener(this);
+        data_saldo_nasabah.setOnClickListener(this);
+        data_biaya_operasional.setOnClickListener(this);
         logout.setOnClickListener(this);
     }
 
@@ -138,6 +145,14 @@ public class SuperAdminActivity extends AppCompatActivity implements View.OnClic
                 Intent cv_data_super_admin = new Intent(this, DataUserActivity.class);
                 cv_data_super_admin.putExtra("mode", Util.MODE.MODE_SUPER_ADMIN);
                 startActivity(cv_data_super_admin);
+                break;
+            case R.id.cv_data_saldo_nasabah:
+                Intent cv_data_saldo_nasabah = new Intent(this, DataSaldoNasabahActivity.class);
+                startActivity(cv_data_saldo_nasabah);
+                break;
+            case R.id.cv_pendapatan:
+                Intent cv_pendapatan = new Intent(this, DataPotonganActivity.class);
+                startActivity(cv_pendapatan);
                 break;
             case R.id.btnlogoutsa:
                 mAuth.signOut();
